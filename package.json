@@ -11,5 +11,8 @@
   "dependencies": {
     "vis": "^4.21.0",
     "web3": "^1.0.0-beta.37"
+  },
+  "devDependencies": {
+    "clevis": "github:austintgriffith/clevis#0.1.0"
   }
 }
