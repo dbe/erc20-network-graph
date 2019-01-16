@@ -1,4 +1,3 @@
-
 body {
   font-family: sans-serif;
   color:#888888;
@@ -13,4 +12,18 @@ a {
 a:visited {
   color:#999999;
   text-decoration: none;
+}
+
+#resetter {
+  width: 100px;
+  height: 50px;
+  color: white;
+}
+
+.should-reload-true {
+  background-color: green;
+}
+
+.should-reload-false {
+  background-color: red;
 }
