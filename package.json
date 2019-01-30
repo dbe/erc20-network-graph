@@ -1,5 +1,5 @@
 {
-  "name": "graphpoa",
+  "name": "erc20-network-graph",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,6 +17,6 @@
     "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
-    "clevis": "github:austintgriffith/clevis#0.1.0"
+    "clevis": "github:austintgriffith/clevis#master"
   }
 }
