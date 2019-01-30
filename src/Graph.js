@@ -13,11 +13,6 @@ class Graph extends Component {
 
     this.web3 = new Web3(new Web3.providers.HttpProvider('https://dai.poa.network'))
 
-    this.state = {
-      nodes: [],
-      edges: []
-    }
-
     this.fetchPastEvents()
   }
 
@@ -27,11 +22,14 @@ class Graph extends Component {
     let nodeSet = new Set()
 
     let past = contract.getPastEvents('Transfer', {
-      fromBlock: 0,
+      fromBlock: 'earliest',
       toBlock: 'latest'
     })
 
+    console.log('past: ', past);
+
     past.then(events => {
+      console.log('events: ', events);
       events.forEach((event, i) => {
         let { to, from, value } = event.returnValues
         // console.log('to: ', to);
@@ -53,6 +51,8 @@ class Graph extends Component {
 
       console.log('nodes: ', nodes);
       console.log('edges: ', edges);
+    }).catch(e => {
+      console.log('e: ', e);
     })
   }
 
