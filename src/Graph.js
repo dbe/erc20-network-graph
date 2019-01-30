@@ -1,6 +1,6 @@
+import vis from 'vis';
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import { Network, Node, Edge } from 'react-vis-network';
 
 import './Graph.css';
 
@@ -33,8 +33,7 @@ class Graph extends Component {
 
     past.then(events => {
       events.forEach((event, i) => {
-        // let { to, from, value } = event.returnValues
-        let { to, from } = event.returnValues
+        let { to, from, value } = event.returnValues
         // console.log('to: ', to);
         // console.log('from: ', from);
         // console.log('value: ', value);
@@ -42,37 +41,24 @@ class Graph extends Component {
         nodeSet.add(to)
         nodeSet.add(from)
 
-        //TODO: Add value here somehow
-        edges.push(<Edge id={i} to={to} from={from} />);
+        edges.push({to, from, value});
       })
 
-      let nodes = Array.from(nodeSet).map(id => {
-        let label = id.substring(0,6)
-        return <Node id={id} label={label} />;
-      })
+      let nodes = new vis.DataSet(
+        Array.from(nodeSet).map(id => {
+          let label = id.substring(0,6)
+          return {id, label};
+        })
+      );
 
-
-      this.setState({nodes, edges});
+      console.log('nodes: ', nodes);
+      console.log('edges: ', edges);
     })
-  }
-
-  myNetwork() {
-    let network =  (
-      <Network>
-        {[
-          ...this.state.nodes,
-          ...this.state.edges
-        ]}
-      </Network>
-    );
-
-    return network
   }
 
   render() {
     return (
       <div>
-        { this.myNetwork() }
       </div>
     )
   }

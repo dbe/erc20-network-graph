@@ -26,8 +26,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("Rerendering")
-    console.log('this.state.shouldReload: ', this.state.shouldReload);
     return (
       <div className="App">
         <button id="resetter" className={`should-reload-${this.state.shouldReload}`} onClick={this.toggle.bind(this)} >
