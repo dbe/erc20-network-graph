@@ -4,20 +4,29 @@ import Web3 from 'web3';
 
 import './Graph.css';
 
-import ABI from "./contractAbis/Burner.abi.js"
-// let ADDRESS = '0xDec31651Bec1fBbFF392aa7DE956d6EE4559498b'
-let ADDRESS = '0xA95D505E6933cB790ED3431805871EfE4E6BbafD'
+import ABI from "./contractAbis/ERC20Vendable.abi.js"
+// let ADDRESS = '0xDec31651Bec1fBbFF392aa7DE956d6EE4559498b' //BURN v1
+// let ADDRESS = '0xA95D505E6933cB790ED3431805871EfE4E6BbafD' //BURN v2
+// let ADDRESS = '0x3e50bf6703fc132a94e4baff068db2055655f11b' //Buffidai
+let ADDRESS = '0xdac17f958d2ee523a2206206994597c13d831ec7' //Tether Mainnet
 
 class Graph extends Component {
   constructor(props) {
     super(props);
 
-    this.web3 = new Web3(new Web3.providers.HttpProvider('https://dai.poa.network'))
+    // this.web3 = new Web3(new Web3.providers.HttpProvider('https://dai.poa.network'))
+    this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://mainnet.infura.io/ws/v3/f1f48e4d6201410c954df4c1a986ca9d'))
 
     this.fetchPastEvents().then(data => {
-      console.log('data: ', data);
       let div = document.getElementById('network')
-      let network = new vis.Network(div, data, {});
+      let network = new vis.Network(div, data, {
+        layout: {
+          improvedLayout: false
+        },
+        physics: {
+          stabilization: false
+        }
+      });
     });
   }
 
@@ -26,13 +35,38 @@ class Graph extends Component {
     let edges = []
     let nodeSet = new Set()
 
-    let past = contract.getPastEvents('Transfer', {
-      fromBlock: 'earliest',
-      toBlock: 'latest'
+    // console.log("In fetch past")
+    //
+    // let emitter = contract.events.Transfer({
+    //   fromBlock: 'earliest',
+    //   toBlock: 'latest'
+    // }, (error, event) => {
+    //   console.log('error: ', error);
+    //   console.log('event: ', event);
+    // })
+    //
+    // console.log('emitter: ', emitter);
+    //
+    // emitter.on('data', (data) => {
+    //   console.log('data: ', data);
+    // })
+    //
+    // emitter.on('changed', (event) => {
+    //   console.log('changed event: ', event);
+    // })
+    //
+    // emitter.on('error', console.error)
+
+    let past = this.web3.eth.getBlockNumber().then(block => {
+      return contract.getPastEvents('Transfer', {
+        fromBlock: block - 100,
+        toBlock: 'latest'
+      })
+
     })
 
+
     return past.then(events => {
-      console.log('events: ', events);
       events.forEach((event, i) => {
         let { to, from, value } = event.returnValues
         nodeSet.add(to)
@@ -50,9 +84,6 @@ class Graph extends Component {
 
       edges = new vis.DataSet(edges)
 
-      console.log('nodes: ', nodes);
-      console.log('edges: ', edges);
-
       return {
         nodes,
         edges
@@ -62,9 +93,11 @@ class Graph extends Component {
     })
   }
 
+
   render() {
     return (
       <div id="network">
+        Loading
       </div>
     )
   }

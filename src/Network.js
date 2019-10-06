@@ -35,7 +35,6 @@ class Network extends Component {
 
     var options = {};
 
-    // initialize your network!
     var network = new vis.Network(this.ref.current, data, options);
     console.log('network: ', network);
   }
